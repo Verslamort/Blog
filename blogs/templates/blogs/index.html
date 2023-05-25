@@ -1,0 +1,17 @@
+{% extends 'blogs/base.html' %}
+{% block content %}
+  <p><h1>Blog 主页</h1></p>
+  <ul>
+  {% for blogpost in blogposts %}
+    <li>
+      <p>{{ blogpost.date_added|date:'Y m d,H:i' }}</p>
+    </li>
+    <p>{{ blogpost.title }}</p>
+    <p>{{ blogpost|linebreaks }}</p>
+    <a href="{% url 'blogs:edit_blog' blogpost.id %}">修改博客</a>
+  {% empty %}
+    <p>Add</p>
+  {% endfor %}
+  </ul>
+
+{% endblock content %}
