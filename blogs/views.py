@@ -1,6 +1,8 @@
+from django.http import Http404
 from django.shortcuts import render, redirect
 from .models import BlogPost
 from .forms import BlogPostForm, BlogForm
+from django.contrib.auth.decorators import login_required
 
 
 def index(request):
@@ -10,6 +12,7 @@ def index(request):
     return render(request, 'blogs/index.html', context)
 
 
+@login_required
 def new_blog(request):
     """添加新博客"""
     if request.method != 'POST':
@@ -23,11 +26,13 @@ def new_blog(request):
     return render(request, 'blogs/new_blog.html', context)
 
 
+@login_required
 def edit_blog(request, blog_id):
     """编辑博客"""
     blogpost = BlogPost.objects.get(id=blog_id)
     title = blogpost.title
 
+    check_topic_owner(blogpost, request)
     if request.method != 'POST':
         form = BlogPostForm(instance=blogpost)
     else:
@@ -37,3 +42,8 @@ def edit_blog(request, blog_id):
             return redirect('blogs:index')
     context = {'blogpost': blogpost, 'title': title, 'form': form}
     return render(request, 'blogs/edit_blog.html', context)
+
+
+def check_topic_owner(blogpost, request):
+    if blogpost.owner != request.user:
+        raise Http404
