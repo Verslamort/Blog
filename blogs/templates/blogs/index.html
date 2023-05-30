@@ -1,6 +1,8 @@
 {% extends 'blogs/base.html' %}
+{% block page_header %}
+  <h1>Blog 主页</h1>
+{% endblock page_header %}
 {% block content %}
-  <p><h1>Blog 主页</h1></p>
   <ul>
   {% for blogpost in blogposts %}
     <li>
@@ -10,7 +12,9 @@
     <p>{{ blogpost|linebreaks }}</p>
     <a href="{% url 'blogs:edit_blog' blogpost.id %}">修改博客</a>
   {% empty %}
-    <p>Add</p>
+    <li>
+      <h3>blogs have been made yet.</h3>
+    </li>
   {% endfor %}
   </ul>
 

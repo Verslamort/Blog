@@ -20,7 +20,9 @@ def new_blog(request):
     else:
         form = BlogPostForm(data=request.POST)
         if form.is_valid():
-            form.save()
+            new_blog = form.save(commit=False)
+            new_blog.owner = request.user
+            new_blog.save()
             return redirect('blogs:index')
     context = {'form': form}
     return render(request, 'blogs/new_blog.html', context)
